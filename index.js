@@ -1,22 +1,18 @@
-import express from "express";
-import bodyParser from "body-parser";
-import cors from "cors";
-import authRouter from "./auth.js";
-import adminResponsibilityRouter from "./adminResponsibility.js";
-import { isAdmin } from "./isAdmin.js";
-
+import express from 'express';
+import dotenv from 'dotenv';
+import productRoutes from './productRoutes.js';
+import adminAuthRoutes from './adminAuthRoutes.js';
+import userRoutes from './userRouter.js';
 const app = express();
-const PORT = 3000;
+dotenv.config();
 
-app.use(cors());
-app.use(bodyParser.json());
+app.use(express.json());
 
-app.use("/auth", authRouter);
-app.use("/admin", isAdmin, adminResponsibilityRouter);
-app.get("/admin-only", isAdmin, (req, res) => {
-  res.json({ message: "Admin-only route" });
-});
+app.use('/admin', adminAuthRoutes);
+app.use('/products', productRoutes);
+app.use('/users', userRoutes);
 
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
